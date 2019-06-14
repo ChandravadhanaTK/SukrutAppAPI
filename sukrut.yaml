@@ -1,0 +1,606 @@
+swagger: "2.0"
+info:
+  description: "This product is based on the concept of a Treasure Hunt using Geocaching. It aims to provide a one of its kind user experience, promoting an engaging & healthy way to shop for customers, bringing in more footfalls for Merchants thereby increasing their in-store business. "
+  version: "1.0.0"
+  title: "Sukrut App"
+  termsOfService: "terms"
+  contact:
+    name: "JavaJ2EEFSEWorkshop2"
+    email: "JavaJ2EEFSEWorkshop2@syntelinc.com"
+  license:
+    name: "JavaJ2EEFSEWorkshop2"
+    url: "http://opensource.org/licenses/JavaJ2EEFSEWorkshop2"
+host: "localhost:8080"
+basePath: "/v1"
+tags:
+  - name: "vendorOnboard"
+    description: "Vendor Onboarding Page"
+  - name: "vendor"
+    description: "Vendor Enrollment Page"
+  - name: "userEnrollment"
+    description: "User Auto Enrollment Page"
+  - name: "store"
+    description: "Store Information Page"
+  - name: "feedback"
+    description: "Feedbacks from the users"
+schemes:
+  - http
+  - https
+paths:
+  /vendorOnboard/all:
+    get:
+      tags:
+      - "vendorOnboard"
+      summary: "Get all vendorOnboarded list"
+      description: "Returns the list of all vendorOnboarding to the Sukrut application"
+      operationId: " getvendorOnboardList"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VendorOnboard"
+  /vendorOnboard/accept:
+    post:
+      tags:
+        - "vendorOnboard"
+      summary: "Accept the vendorOnboard terms"
+      description: "Accept the vendorOnboard terms"
+      operationId: "acceptTerms"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+        405:
+          description: "Invalid input"
+  /vendorOnboard/upload:
+    post:
+      tags:
+        - "vendorOnboard"
+      summary: "Upload Vendor Onboard information"
+      description: "Upload Vendor Onboard information"
+      operationId: "uploadInformation"
+      produces:
+        - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Vendor provides all the details"
+        required: true
+        schema:
+          $ref: "#/definitions/VendorOnboard"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VendorOnboard"
+        400:
+          description: "invalid input"
+  /vendor/vendorlist:
+    get:
+      tags:
+        - "vendor"
+      summary: "Get vendor list"
+      description: "Returns the list of all vendors"
+      operationId: "getvendorList"
+      produces:
+        - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Vendor"
+  /vendor/accept:
+    post:
+      tags:
+        - "vendor"
+      summary: "Accepts the vendor"
+      description: "Sends the approved response"
+      operationId: "acceptVendor"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Approved vendor is being sent"
+          required: true
+          schema:
+            $ref: "#/definitions/Vendor"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Vendor not found"
+        405:
+          description: "Invalid input"
+  /vendor/reject:
+    post:
+      tags:
+        - "vendor"
+      summary: "Rejects the vendor"
+      description: "Sends the rejected response"
+      operationId: "rejectVendor"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Rejected vendor is being sent"
+          required: true
+          schema:
+            $ref: "#/definitions/Vendor"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Vendor not found"
+        405:
+          description: "Invalid input"
+  /vendor/search:
+    get:
+      tags:
+        - "vendor"
+      summary: "finds the vendor details."
+      description: "retrieves all the vendor details including the documents they submitted."
+      operationId: "getVendorDetails"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "vendorKey"
+          in: "query"
+          description: "ID of vendor to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Vendor"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Vendor not found"
+  /vendor/delete/{vendorId}:
+    delete:
+      tags:
+        - "vendor"
+      summary: "Deletes a vendor"
+      description: "Deltes the vendor"
+      operationId: "deleteVendor"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "vendorId"
+          in: "path"
+          description: "Vendor id to delete"
+          required: true
+          type: "string"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Vendor not found"
+  /vendor/{vendorId}:
+    get:
+      tags:
+        - "vendor"
+      summary: "get vendor by id"
+      description: "Returns the particular vendor"
+      operationId: "getVendor"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "vendorId"
+          in: "path"
+          description: "id to search for vendor"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Vendor"
+  /userEnrollment/gpson/:
+    get:
+      tags:
+        - "userEnrollment"
+      summary: "Get Approved Vendor List - GPS ON"
+      description: "Returns the Get List of Approved Vendor Store List, within the radius of User Geolocation"
+      operationId: "getVendorList"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "latitude"
+          in: "query"
+          description: "ID of vendors to return"
+          required: true
+          type: "string"
+        - name: "longitude"
+          in: "query"
+          description: "ID of vendors to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VendorsList"
+        400:
+          description: "Invalid latitude and longitude supplied"
+        404:
+          description: "vendorsList not found"
+  /userEnrollment/pushNotification:
+    get:
+      tags:
+        - "userEnrollment"
+      summary: "push Notification to User."
+      description: "retrieve user details, this will include mobile device information."
+      operationId: "getUserDetails"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "UserID"
+          in: "query"
+          description: "details on UserID to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VendorsList"
+        400:
+          description: "Invalid User ID supplied"
+        404:
+          description: "details of User ID not found"
+  /store/all/:
+    get:
+      tags:
+        - "store"
+      summary: "Get store list"
+      description: "Returns the list of all stores"
+      operationId: "getStoreList"
+      produces:
+        - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Store"
+  /store/new/:
+    post:
+      tags:
+        - "store"
+      summary: "Create new store"
+      description: "Creates new store"
+      operationId: "addstore"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Vendor will able to add stores depending upon the location"
+          required: true
+          schema:
+            $ref: "#/definitions/Store"
+      responses:
+        405:
+          description: "Invalid input"
+  /store/edit:
+    post:
+      tags:
+        - "store"
+      summary: "Update store"
+      description: "Updates the store"
+      operationId: "updateStore"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+         -  in: "body"
+            name: "body"
+            description: "Vendor will able to add stores depenpending upon the location"
+            required: true
+            schema:
+             $ref: "#/definitions/Store"
+      responses:
+        400:
+          description: "Invalid StoreName supplied"
+        404:
+          description: "Store not found"
+        405:
+          description: "Invalid input"
+  /storeOffers/add:
+    post:
+      tags:
+        - "offers"
+      summary: "Add offers by vendor"
+      description: "vendor will able to add offers"
+      operationId: "getofferByproductName"
+      produces:
+        - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "offers should be displayed"
+        required: true
+        schema:
+          $ref: "#/definitions/Offers"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Offers"
+        400:
+          description: "Invalid Name supplied"
+        404:
+          description: "Store not found  "
+  /store/{storeId}:
+   get:
+      tags:
+        - "store"
+      summary: "get store details storeId"
+      description: "Returns the particular storeId details"
+      operationId: "getStoreDetailsByStoreId"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "storeId"
+          in: "path"
+          description: "id to search for store"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Store"
+        400:
+         description: "invalid Id     "
+  /feedback/all:
+    get:
+      tags:
+        - "feedback"
+      summary: "Get User Comments"
+      description: "Returns the comments from the user"
+      operationId: "getComments"
+      produces:
+        - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Feedback"
+  /feedback/new:
+    put:
+      tags:
+        - "feedback"
+      summary: "Add Referal Bonus"
+      description: "Successful Referal will be Rewarded"
+      operationId: "addOffers"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Refer & Earn only for the contacts"
+          required: true
+          schema:
+            $ref: "#/definitions/Feedback"
+      responses:
+        405:
+          description: "Invalid input"
+definitions:
+  VendorOnboard:
+    type: "object"
+    required:
+      - "vendorName"
+      - "vendorId"
+      - "vendorAddress"
+      - "vendorPhoneNo"
+      - "licence"
+      - "city"
+      - "country"
+    properties:
+      vendorName:
+        type: "string"
+      vendorId:
+        type: "string"
+      vendorAddress:
+        type: "string"
+      vendorPhoneNo:
+        type: "number"
+        format: "int"
+      licence:
+        type: "string"
+      city:
+        type: "string"
+      country:
+        type: "string"
+  Vendor:
+    type: "object"
+    required:
+      - "vendorName"
+      - "vendorStatus"
+      - "vendorComments"
+      - "vendorTimestamp"
+    properties:
+      vendorId:
+        type: "string"
+      vendorName:
+        type: "string"
+      vendorStatus:
+        type: "string"
+      vendorComments:
+        type: "string"
+      vendorTimestamp:
+        type: "string"
+        format: "date-time"
+      createdDate:
+        type: "string"
+        format: "date-time"
+      updatedDate:
+        type: "string"
+        format: "date-time"
+      is_delete:
+        type: "boolean"
+      createdBy:
+        type: "string"
+      updatedBy:
+        type: "string"
+      login_id:
+        type: "string"
+  VendorsList:
+    type: "object"
+    required:
+      - "userMobileNumber"
+      - "vendorStoreName"
+      - "vendorLocation"
+      - "vendorAddress"
+    properties:
+      userId:
+        type: "string"
+      userMobileNumber:
+        type: "number"
+        format: "double"
+      userLocation:
+        type: "string"
+      vendorStoreName:
+        type: "string"
+      vendorLocation:
+        type: "string"
+      vendorAddress:
+        type: "string"
+      vendorLocationLatitude:
+        type: "string"
+      vendorLocationLongitude:
+        type: "string"
+  Store:
+    type: "object"
+    required:
+      - "storeId"
+      - "storeName"
+      - "storeSeq"
+      - "geoLocation"
+      - "storePincode"
+    properties:
+      storeId:
+        type: "string"
+      storeSeq:
+        type: "string"
+      storeName:
+        type: "string"
+      managerName:
+        type: "string"
+      managerContact:
+        type: "string"
+      storeLandline:
+        type: "string"
+      storeArea:
+        type: "string"
+      storePincode:
+        type: "string"
+      address:
+        type: "string"
+      geoLocation:
+        type: "string"
+      createdDate:
+        type: "string"
+        format: "date-time"
+      updatedDate:
+        type: "string"
+        format: "date-time"
+      deletionMark:
+        type: "boolean"
+      createdBy:
+        type: "string"
+      updatedBy:
+        type: "string"
+  Offers:
+    type: "object"
+    required:
+      - "offerId"
+      - "productName"
+      - "validFrom"
+      - "validTo"
+      - "offerDesc"
+      - "offerPercentage"
+    properties:
+      offerId:
+        type: "string"
+      offerDesc:
+        type: "string"
+      productName:
+        type: "string"
+      offerPercentage:
+        type: "number"
+        format: "int"
+      validFrom:
+        type: "string"
+        format: "date-time"
+      validTo:
+        type: "string"
+        format: "date-time"
+      createdDate:
+        type: "string"
+        format: "date-time"
+      updatedDate:
+        type: "string"
+        format: "date-time"
+      deletionMark:
+        type: "boolean"
+      createdBy:
+        type: "string"
+      updatedBy:
+        type: "string"
+  Feedback:
+    type: "object"
+    required:
+      - "commentId"
+      - "commentDescription"
+      - "createdBy"
+    properties:
+      commentId:
+        type: "number"
+      commentDescription:
+        type: "string"
+      createdBy:
+        type: "string"
